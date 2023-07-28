@@ -1,4 +1,5 @@
 # vue-newsreader-app
+A simple App made using Vue3, Vuex and router that gives information about the news
 
 ## Project setup
 ```

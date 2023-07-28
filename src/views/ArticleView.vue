@@ -1,6 +1,6 @@
 <template>
     <div class="article">
-      <router-link to="/" class="back-button">← Back</router-link>
+      <router-link to="/home" class="back-button">← Back</router-link>
       <div class="article-content">
          <img :src="newsItem.Image" alt="Article Image" class="article-image">
          <h1 class="article-title">{{ newsItem.Title }}</h1>
@@ -35,7 +35,6 @@
           day: "numeric",
           hour: "numeric",
           minute: "numeric",
-          second: "numeric",
           hour12: false 
         });
       }
