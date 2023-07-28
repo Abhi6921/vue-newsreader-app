@@ -2,36 +2,46 @@
     <div class="article">
       <router-link to="/" class="back-button">← Back</router-link>
       <div class="article-content">
-        <img :src="article.imageURL" alt="Article Image" class="article-image">
-        <h1 class="article-title">{{ article.title }}</h1>
-        <p class="article-description">{{ article.description }}</p>
-        <div class="article-details">
-          <p class="article-author">Article written by: {{ article.author }}</p>
-          <p class="article-publish-date">Published on: {{ formatDate(article.publishDateTime) }}</p>
-          <a :href="article.articleURL" target="_blank" class="read-more-button">Read More</a>
+         <img :src="newsItem.Image" alt="Article Image" class="article-image">
+         <h1 class="article-title">{{ newsItem.Title }}</h1>
+         <p class="article-description">{{ newsItem.Summary }}</p>
+         <div class="article-details">
+          <p class="article-publish-date">Published on: {{ formatDate(newsItem.PublishDate) }}</p>
+          <a :href="newsItem.Url" target="_blank" class="read-more-button">Read More</a>
         </div>
       </div>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
   export default {
     computed: {
-      article() {
-        return this.$store.state.articles.find(
-          (article) => article.slug === this.$route.params.slug
-        );
-      },
+      newsItem() {
+        const id = parseInt(this.$route.params.Id);
+        return this.$store.getters.getArticleById(id);
+      }
     },
-
+    created() {
+      // Fetch the specific news item data on component creation
+      const id = parseInt(this.$route.params.Id);
+      this.$store.dispatch('fetchNewsById', id);
+    },
     methods: {
-        formatDate(datetime) {
-           const date = new Date(datetime);
-           return date.toLocaleString(); // Adjust the format as per your preference
-        },
+      formatDate(dateString) {
+        const dateTime = new Date(dateString);
+        return dateTime.toLocaleString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+          hour12: false 
+        });
+      }
     }
   };
-  </script>
+</script>
   
 <style>
 .article {
@@ -115,5 +125,5 @@
 hr {
   margin-bottom: 1rem;
 }
-  </style>
+</style>
   
