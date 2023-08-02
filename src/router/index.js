@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import ArticleView from '../views/ArticleView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
+import LikedArticlesView from '../views/LikedArticlesView.vue'
 import store from '../store';
 
 const routes = [
@@ -30,6 +31,11 @@ const routes = [
      path: '/register',
      name: 'register',
      component: RegisterView
+  },
+  {
+    path: '/likedArticles',
+    name: 'LikedArticles',
+    component: LikedArticlesView
   }
 ]
 
@@ -39,17 +45,17 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // Check if the user is authenticated
-    if (store.state.isAuthenticated) {
-      next();
-    } else {
-      // Redirect to the login page if not authenticated
-      next('/login');
-    }
-  } else {
-    next();
-  }
+   if(to.meta.requiresAuth) {
+     if(store.getters.isAuthenticated) {
+        next();
+     }
+     else {
+      next('/login')
+     }
+   }
+   else {
+     next();
+   }
 });
 
 export default router

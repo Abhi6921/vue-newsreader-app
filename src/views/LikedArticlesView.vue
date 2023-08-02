@@ -1,21 +1,19 @@
 <template>
-  <div class="article-list">
-    
-    <div class="title-bar">
-      <h1 class="page-title">Presenting you all the latest news</h1>
-      <router-link to="/likedArticles" class="liked-article-button">Liked</router-link>
-      <button v-if="isAuthenticated" class="logout-button" @click="logout">Logout</button>
+    <div class="article-list">
+      <div class="title-bar">
+        <h1 class="page-title">Liked Articles</h1>
+        <router-link to="/home" class="home-article-button">Home</router-link>
     </div>
     <div v-if="isLoading" class="content-container">
       <!-- Show CircularProgressView while fetching articles -->
       <CircularProgressView />
     </div>
     <div v-else class="cards-container">
+       <div v-if="articles.length === 0" class="no-articles-message">No liked articles found.</div>
       <div class="card" v-for="article in articles" :key="article.Id">
         <img :src="article.Image" alt="Article Image" class="card-image">
         <div class="card-content">
           <h2 class="card-title">{{ article.Title }}</h2>
-          <p>{{ article.IsLiked }}</p>
           <router-link :to="`/article/${article.Id}`" class="view-article-btn">Read More</router-link>
         </div>
       </div>
@@ -26,7 +24,6 @@
 <script>
 import { defineComponent, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import router from '../router';
 import CircularProgressView from '../components/CircularProgressView.vue'; 
 
 export default defineComponent({
@@ -35,21 +32,15 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const articles = computed(() => store.state.articles);
+    const articles = computed(() => store.state.LikedArticles);
     const isAuthenticated = computed(() => store.state.isAuthenticated);
     const isLoading = computed(() => store.getters.isLoading);
 
     onMounted(() => {
-      store.dispatch('fetchArticles');
+      store.dispatch('getAllLikedArticles');
     });
 
-    const logout = () => {
-      store.dispatch('logout');
-      // Redirect the user to the login page after logout
-      router.push('/login');
-    };
-
-    return { articles, isAuthenticated, isLoading, logout };
+    return { articles, isAuthenticated, isLoading };
   },
 });
 </script>
@@ -68,24 +59,7 @@ export default defineComponent({
   margin: 0 auto; /* Center the title horizontally */
 }
 
-.logout-button {
-  background-color: #dc3545;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  position: relative; /* Add position relative for the top/right positioning */
-  top: 5px; /* Adjust the distance from the top (you can change the value as needed) */
-  right: 50px; /* Adjust the distance from the right (you can change the value as needed) */
-}
-
-.logout-button:hover {
-  background-color: #c82333;
-}
-
-.liked-article-button {
+.home-article-button {
   background-color: #4035de;
   color: #fff;
   padding: 0.5rem 1rem;
@@ -98,7 +72,7 @@ export default defineComponent({
   right: 90px; /* Adjust the distance from the right (you can change the value as needed) */
 }
 
-.liked-article-button:hover {
+.home-article-button:hover {
   background-color: #6b64bf;
 }
 
@@ -159,3 +133,5 @@ export default defineComponent({
   background-color: #0056b3;
 }
 </style>
+
+

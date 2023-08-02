@@ -8,12 +8,17 @@
          <div class="article-details">
           <p class="article-publish-date">Published on: {{ formatDate(newsItem.PublishDate) }}</p>
           <a :href="newsItem.Url" target="_blank" class="read-more-button">Read More</a>
+          <i 
+            :class="isLiked ? 'fas fa-heart' : 'far fa-heart'"
+            @click="toggleHeart">
+          </i>
         </div>
       </div>
     </div>
 </template>
   
 <script>
+import '@fortawesome/fontawesome-free/css/all.css';
   export default {
     computed: {
       newsItem() {
@@ -37,6 +42,9 @@
           minute: "numeric",
           hour12: false 
         });
+      },
+      toggleHeart() {
+        this.isLiked = !this.isLiked;
       }
     }
   };
